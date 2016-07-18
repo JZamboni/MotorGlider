@@ -44,7 +44,7 @@ class Aircraft(GeomBase):
         """
         return float(Importer(Component='Performance',
                               VariableName='Cruise Mach number',
-                              Default=0.77,
+                              Default=0.22,
                               Path=self.filePath).getValue)
 
     @Input
@@ -56,7 +56,7 @@ class Aircraft(GeomBase):
         """
         return float(Importer(Component='Performance',
                               VariableName='Wing loading',
-                              Default=509.68,
+                              Default=42.86,
                               Path=self.filePath).getValue)
 
     @Input
@@ -68,7 +68,7 @@ class Aircraft(GeomBase):
         """
         return float(Importer(Component='Performance',
                               VariableName='Maximum takeoff weight',
-                              Default=422713.,
+                              Default=7500.,
                               Path=self.filePath).getValue)
 
     @Input
@@ -92,7 +92,7 @@ class Aircraft(GeomBase):
         """
         return float(Importer(Component='Performance',
                               VariableName='Aircraft cruise altitude',
-                              Default=10000.,
+                              Default=1000.,
                               Path=self.filePath).getValue)
 
     @Input
@@ -141,16 +141,16 @@ class Aircraft(GeomBase):
         """
         return str(Importer(Component='Configuration',
                             VariableName='Wing position',
-                            Default='low wing',
+                            Default='mid wing',
                             Path=self.filePath).getValue)
 
-    @Input
-    def outputExt(self):
-        """
-        Extension of output file.
-        :return:
-        """
-        return 'as Input'
+    # @Input
+    # def outputExt(self):
+    #     """
+    #     Extension of output file.
+    #     :return:
+    #     """
+    #     return 'as Input'
 
     # ### Attributes ##################################################################################################
 
@@ -169,72 +169,72 @@ class Aircraft(GeomBase):
         filename = tkFileDialog.askopenfilename(**file_opt)
         return str(filename)
 
-    @Attribute
-    def outputResult(self):
-        """
-        Trigger the creation of the output file
-        """
-        return Outporter(ListValues=self.listValues,
-                         Path=self.filePath,
-                         OutputExt=self.outputExt).writeValues()
+    # @Attribute
+    # def outputResult(self):
+    #     """
+    #     Trigger the creation of the output file
+    #     """
+    #     return Outporter(ListValues=self.listValues,
+    #                      Path=self.filePath,
+    #                      OutputExt=self.outputExt).writeValues()
+    #
+    # @Attribute
+    # def outputSTEP(self):
+    #     """
+    #     Trigger the creation of the STEP file
+    #     """
+    #     return os.path.dirname(STEP.__file__)
 
-    @Attribute
-    def outputSTEP(self):
-        """
-        Trigger the creation of the STEP file
-        """
-        return os.path.dirname(STEP.__file__)
-
-    @Attribute
-    def listValues(self):
-        """
-        List of elements to write the output file of the aircraft, divided in inputs and attributes
-        """
-        lst = {}
-        configuration = {
-            "Configuration":
-                {
-                    "Inputs":
-                        {
-                            "Aircraft name": {"value": self.projectName, "unit": ""},
-                            "Tail type": {"value": self.tailType, "unit": ""},
-                            "Number of engines": {"value": self.nEngine, "unit": ""},
-                            "Engine location": {"value": self.enginePos, "unit": ""},
-                            "Wing position": {"value": self.wingPosition, "unit": ""}
-                        },
-                    "Attributes":
-                        {
-                        }
-
-                }
-        }
-        lst.update(configuration)
-        performance = {
-            "Performance":
-                {
-                    "Inputs":
-                        {
-                            "Cruise Mach number": {"value": self.maCruise, "unit": ""},
-                            "Wing loading": {"value": self.wingLoading, "unit": "kg / m^2"},
-                            "Maximum takeoff weight": {"value": self.mTOW, "unit": "N"},
-                            "Thrust to Weight ratio": {"value": self.twRatio, "unit": ""},
-                            "Aircraft cruise altitude": {"value": self.hCruise, "unit": "m"},
-                        },
-                    "Attributes":
-                        {
-                        }
-
-                }
-        }
-        lst.update(performance)
-        lst.update(self.fuselage.outputList)
-        lst.update(self.enginebase.outputList)
-        lst.update(self.evaluations.outputList)
-        lst.update(self.landingGear.outputList)
-        lst.update(self.htpbase.outputList)
-        lst.update(self.vtpbase.outputList)
-        lst.update(self.wingbase.outputList)
-        return lst
+    # @Attribute
+    # def listValues(self):
+    #     """
+    #     List of elements to write the output file of the aircraft, divided in inputs and attributes
+    #     """
+    #     lst = {}
+    #     configuration = {
+    #         "Configuration":
+    #             {
+    #                 "Inputs":
+    #                     {
+    #                         "Aircraft name": {"value": self.projectName, "unit": ""},
+    #                         "Tail type": {"value": self.tailType, "unit": ""},
+    #                         "Number of engines": {"value": self.nEngine, "unit": ""},
+    #                         "Engine location": {"value": self.enginePos, "unit": ""},
+    #                         "Wing position": {"value": self.wingPosition, "unit": ""}
+    #                     },
+    #                 "Attributes":
+    #                     {
+    #                     }
+    #
+    #             }
+    #     }
+    #     lst.update(configuration)
+    #     performance = {
+    #         "Performance":
+    #             {
+    #                 "Inputs":
+    #                     {
+    #                         "Cruise Mach number": {"value": self.maCruise, "unit": ""},
+    #                         "Wing loading": {"value": self.wingLoading, "unit": "kg / m^2"},
+    #                         "Maximum takeoff weight": {"value": self.mTOW, "unit": "N"},
+    #                         "Thrust to Weight ratio": {"value": self.twRatio, "unit": ""},
+    #                         "Aircraft cruise altitude": {"value": self.hCruise, "unit": "m"},
+    #                     },
+    #                 "Attributes":
+    #                     {
+    #                     }
+    #
+    #             }
+    #     }
+    #     lst.update(performance)
+    #     lst.update(self.fuselage.outputList)
+    #     # lst.update(self.enginebase.outputList)
+    #     lst.update(self.evaluations.outputList)
+    #     # lst.update(self.landingGear.outputList)
+    #     lst.update(self.htpbase.outputList)
+    #     lst.update(self.vtpbase.outputList)
+    #     lst.update(self.wingbase.outputList)
+    #     return lst
 
     # ### Parts ######################################################################################################
 
@@ -253,8 +253,6 @@ class Aircraft(GeomBase):
                     filePath=self.filePath,
                     cg=self.evaluations.cg,
                     ac=self.evaluations.ac,
-                    noseLength=self.fuselage.noseLength,
-                    cylinderLength=self.fuselage.cylinderLength,
                     wingPosition=self.wingPosition)
 
     @Part
@@ -265,29 +263,29 @@ class Aircraft(GeomBase):
         return Fuselage(maCruise=self.maCruise,
                         filePath=self.filePath)
 
-    @Part
-    def enginebase(self):
-        """
-        Engine element of the aircraft
-        """
-        return Engine(fuselageLength=self.fuselage.fuselageLength,
-                      fuselageDiameter=self.fuselage.fuselageDiameter,
-                      noseLength=self.fuselage.noseLength,
-                      cylinderLength=self.fuselage.cylinderLength,
-                      wingSpan=self.wingbase.span,
-                      chord35=self.wingbase.chord35,
-                      chord40=self.wingbase.chord40,
-                      chord70=self.wingbase.chord70,
-                      wingVertPos=self.wingbase.vertPos,
-                      wingLongPos=self.wingbase.longPos,
-                      dihedral=self.wingbase.dihedral,
-                      sweepLE=self.wingbase.sweepLE,
-                      tcRatio=self.wingbase.tcRatio,
-                      filePath=self.filePath,
-                      nEngine=self.nEngine,
-                      enginePos=self.enginePos,
-                      mTOW=self.mTOW,
-                      twRatio=self.twRatio)
+    # @Part
+    # def enginebase(self):
+    #     """
+    #     Engine element of the aircraft
+    #     """
+    #     return Engine(fuselageLength=self.fuselage.fuselageLength,
+    #                   fuselageDiameter=self.fuselage.fuselageDiameter,
+    #                   noseLength=self.fuselage.noseLength,
+    #                   cylinderLength=self.fuselage.cylinderLength,
+    #                   wingSpan=self.wingbase.span,
+    #                   chord35=self.wingbase.chord35,
+    #                   chord40=self.wingbase.chord40,
+    #                   chord70=self.wingbase.chord70,
+    #                   wingVertPos=self.wingbase.vertPos,
+    #                   wingLongPos=self.wingbase.longPos,
+    #                   dihedral=self.wingbase.dihedral,
+    #                   sweepLE=self.wingbase.sweepLE,
+    #                   tcRatio=self.wingbase.tcRatio,
+    #                   filePath=self.filePath,
+    #                   nEngine=self.nEngine,
+    #                   enginePos=self.enginePos,
+    #                   mTOW=self.mTOW,
+    #                   twRatio=self.twRatio)
 
     @Part
     def vtpbase(self):
@@ -301,7 +299,7 @@ class Aircraft(GeomBase):
                    fuselageLength=self.fuselage.fuselageLength,
                    fuselageDiameter=self.fuselage.fuselageDiameter,
                    posFraction=self.wingbase.posFraction,
-                   conePos=self.fuselage.tailSectionCurves[1].center.y,
+                   conePos=self.fuselage.fuselageSectionCurves[-1].center.y,
                    tlH=self.htpbase.tl,
                    filePath=self.filePath,
                    crH=self.htpbase.chordRoot,
@@ -321,7 +319,7 @@ class Aircraft(GeomBase):
                    fuselageLength=self.fuselage.fuselageLength,
                    fuselageDiameter=self.fuselage.fuselageDiameter,
                    posFraction=self.wingbase.posFraction,
-                   conePos=self.fuselage.tailSectionCurves[1].center.y,
+                   conePos=self.fuselage.fuselageSectionCurves[-1].center.y,
                    tlV=self.vtpbase.tl,
                    spanV=self.vtpbase.span,
                    cMACyPosV=self.vtpbase.cMACyPos,
@@ -337,22 +335,22 @@ class Aircraft(GeomBase):
                    wakeDanger=self.wingbase.wake.curveDangerW,
                    wakeSafer=self.wingbase.wake.curveSaferW)
 
-    @Part
-    def landingGear(self):
-        """
-        Landing Gear element of the aircraft
-        """
-        return LandingGear(filePath=self.filePath,
-                           wingPosition=self.wingbase.wingPosition,
-                           fuselageDiameter=self.fuselage.fuselageDiameter,
-                           fuselageLength=self.fuselage.fuselageLength,
-                           posFraction=self.wingbase.posFraction,
-                           cMAC=self.wingbase.cMAC,
-                           cg=self.evaluations.cg,
-                           fuselage=self.fuselage.loft,
-                           wing=self.wingbase.rightWing,
-                           engines=self.enginebase.engineSolid,
-                           htp=self.htpbase.rightTail)
+    # @Part
+    # def landingGear(self):
+    #     """
+    #     Landing Gear element of the aircraft
+    #     """
+    #     return LandingGear(filePath=self.filePath,
+    #                        wingPosition=self.wingbase.wingPosition,
+    #                        fuselageDiameter=self.fuselage.fuselageDiameter,
+    #                        fuselageLength=self.fuselage.fuselageLength,
+    #                        posFraction=self.wingbase.posFraction,
+    #                        cMAC=self.wingbase.cMAC,
+    #                        cg=self.evaluations.cg,
+    #                        fuselage=self.fuselage.loft,
+    #                        wing=self.wingbase.rightWing,
+    #                        engines=self.enginebase.engineSolid,
+    #                        htp=self.htpbase.rightTail)
 
     @Part
     def evaluations(self):
@@ -387,26 +385,26 @@ class Aircraft(GeomBase):
                            enginePos=self.enginebase.enginePos,
                            filePath=self.filePath)
 
-    @Part
-    def node_writer(self):
-        """
-        STEP writer to allow importation in a CAD software of aircraft designed, showed in the GUI
-        """
-        return STEPWriter(nodes=[self.fuselage.loft,
-                                 self.wingbase.leftWing,
-                                 self.wingbase.rightWing,
-                                 self.vtpbase.tail,
-                                 self.htpbase.leftTail,
-                                 self.htpbase.rightTail,
-                                 self.enginebase.engineRight[0],
-                                 self.enginebase.engineLeft[0],
-                                 self.landingGear.noseWheel,
-                                 self.landingGear.noseHub,
-                                 self.landingGear.wheel,
-                                 self.landingGear.hub,
-                                 self.landingGear.wheelLeft,
-                                 self.landingGear.hubLeft],
-                          default_directory=self.outputSTEP)
+    # @Part
+    # def node_writer(self):
+    #     """
+    #     STEP writer to allow importation in a CAD software of aircraft designed, showed in the GUI
+    #     """
+    #     return STEPWriter(nodes=[self.fuselage.loft,
+    #                              self.wingbase.leftWing,
+    #                              self.wingbase.rightWing,
+    #                              self.vtpbase.tail,
+    #                              self.htpbase.leftTail,
+    #                              self.htpbase.rightTail,
+    #                              self.enginebase.engineRight[0],
+    #                              self.enginebase.engineLeft[0],
+    #                              self.landingGear.noseWheel,
+    #                              self.landingGear.noseHub,
+    #                              self.landingGear.wheel,
+    #                              self.landingGear.hub,
+    #                              self.landingGear.wheelLeft,
+    #                              self.landingGear.hubLeft],
+    #                       default_directory=self.outputSTEP)
 
 
 if __name__ == '__main__':

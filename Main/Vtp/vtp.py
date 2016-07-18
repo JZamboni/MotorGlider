@@ -96,7 +96,7 @@ class Vtp(GeomBase):
         :rtype: float
         source: http://adg.stanford.edu/aa241/stability/taildesign.html
         """
-        return 0.0325 + 0.3375 * (self.fuselageDiameter**2 * self.fuselageLength) / (self.surfaceWing * self.spanWing)
+        return 0.015 #ToDo: it should actutally be 0.03 but probably there is a mistake in the calculations
 
     @Input
     def visual(self):
@@ -191,7 +191,7 @@ class Vtp(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 36.
+        return 8.
 
     @Input(settable=settable)
     def fuselageDiameter(self):
@@ -200,7 +200,7 @@ class Vtp(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 4.
+        return 1.
 
     @Input(settable=settable)
     def conePos(self):
@@ -227,7 +227,7 @@ class Vtp(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 17.58
+        return 5.
 
     @Input(settable=settable)
     def crH(self):
@@ -356,7 +356,7 @@ class Vtp(GeomBase):
             tl = self.fuselageLength  # first guess for tail arm
             TR = self.taperRatio
             cR = self.cMACWing  # first guess for the tail root chord
-            posYMAC = 10.  # first guess for the tail MAC position
+            posYMAC = 2.  # first guess for the tail MAC position
 
             while (self.fuselageLength - (self.wingAC + tl + 0.75*cR - posYMAC * tan(radians(self.sweep25)))) < 0:
                 tl = tl - self.tlDecrement

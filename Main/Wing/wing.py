@@ -57,7 +57,7 @@ class Wing(GeomBase):
         """
         return float(Importer(Component='Wing',
                               VariableName='Aspect ratio',
-                              Default=8.5,
+                              Default=22.8,
                               Path=self.filePath).getValue)
 
     @Input
@@ -107,6 +107,8 @@ class Wing(GeomBase):
             return 3 - self.sweep25 / 10 + 2
         elif self.wingPosition == 'high wing':
             return 3 - self.sweep25 / 10 - 2
+        else:
+            return 0.
 
     @Input
     def posFraction(self):
@@ -115,8 +117,7 @@ class Wing(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        pos = (self.noseLength + self.cylinderLength * self.cylinderFraction) / self.fuselageLength
-        return pos
+        return 0.35
 
     @Input
     def visual(self):
@@ -187,7 +188,7 @@ class Wing(GeomBase):
         :Unit: [ ]
         :rtype: float
         """
-        return 0.77
+        return 0.22
 
     @Input(settable=settable)
     def wingLoading(self):
@@ -196,7 +197,7 @@ class Wing(GeomBase):
         :Unit: [kg / m^2]
         :rtype: float
         """
-        return 4496.946809
+        return 43.
 
     @Input(settable=settable)
     def mTOW(self):
@@ -205,7 +206,7 @@ class Wing(GeomBase):
         :Unit: [N]
         :rtype: float
         """
-        return 422713.
+        return 7500.
 
     @Input(settable=settable)
     def hCruise(self):
@@ -214,7 +215,7 @@ class Wing(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 10000.
+        return 1000.
 
     @Input(settable=settable)
     def enginePos(self):
@@ -232,7 +233,7 @@ class Wing(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 35.
+        return 8.75
 
     @Input(settable=settable)
     def fuselageDiameter(self):
@@ -241,7 +242,7 @@ class Wing(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 4.
+        return 1.
 
     @Input(settable=settable)
     def cg(self):
@@ -250,7 +251,7 @@ class Wing(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 14.97
+        return 4.5
 
     @Input(settable=settable)
     def ac(self):
@@ -259,25 +260,7 @@ class Wing(GeomBase):
         :Unit: [m]
         :rtype: float
         """
-        return 14.67
-
-    @Input(settable=settable)
-    def noseLength(self):
-        """
-        Nose length
-        :Unit: [m]
-        :rtype: float
-        """
-        return 3.0
-
-    @Input(settable=settable)
-    def cylinderLength(self):
-        """
-        Cylindrical part length
-        :Unit: [m]
-        :rtype: float
-        """
-        return 22.0
+        return 4.55
 
     # ### Attributes ##################################################################################################
 
@@ -324,21 +307,6 @@ class Wing(GeomBase):
             # get filename
             filename = tkFileDialog.askopenfilename(**file_opt)
             return str(filename)
-
-    @Attribute
-    def cylinderFraction(self):
-        """
-            Wing position fraction of the cylinder, due to engine position
-            :Unit: [m]
-            :rtype: float
-            """
-        if self.enginePos == 'wing':
-            return 0.5
-        elif self.enginePos == 'fuselage':
-            return 0.6
-        else:
-            showwarning("Warning", "Please choose between wing or fuselage mounted")
-            return 0.5
 
     @Attribute
     def maDD(self):
@@ -602,50 +570,52 @@ class Wing(GeomBase):
             return self.fuselageDiameter/2 - 1.05*self.curveRoot.maxY
         elif self.wingPosition == 'low wing':
             return -self.fuselageDiameter/2 - 1.05*self.curveRoot.minY
+        elif self.wingPosition == 'mid wing':
+            return 0.
         else:
             showwarning("Warning", "Please choose between high or low wing configuration")
             return 0.
 
-    @Attribute
-    def outputList(self):
-        lst = {}
-        inputs ={
-            "Wing":
-                {
-                    "Inputs":
-                        {
-                            "Aspect ratio": {"value": self.aspectRatio, "unit": ""},
-                            "Airfoil Mach technology parameter": {"value": self.maTechnology, "unit": ""},
-                            "Span percentage for xFoil analysis": {"value": self.percxfoil, "unit": ""}
-                        },
-                    "Attributes":
-                        {
-                            "Aircraft Mach Dive Divergence": {"value": self.maDD, "unit": ""},
-                            "Dihedral angle": {"value": self.dihedral, "unit": "deg"},
-                            "Sweep at quarter chord": {"value": self.sweep25, "unit": "deg"},
-                            "Wing reference surface": {"value": self.surface, "unit": "m^2"},
-                            "Wing span": {"value": self.span, "unit": "m"},
-                            "Wing root chord": {"value": self.chordRoot, "unit": "m"},
-                            "Wing tip chord": {"value": self.chordTip, "unit": "m"},
-                            "Wing Mean Aerodynamic Chord": {"value": self.cMAC, "unit": "m"},
-                            "Wing position fraction of the cylinder": {"value": self.cylinderFraction, "unit": ""},
-                            "Static pressure at cruise altitude": {"value": self.pressureCruise, "unit": "Pa"},
-                            "Dynamic pressure at aircraft speed and altitude": {"value": self.dynamicPressure, "unit": "Pa"},
-                            "Lift coefficient of aircraft in cruise condition": {"value": self.clCruise, "unit": ""},
-                            "Wing average thickness to chord ratio": {"value": self.tcRatio, "unit": ""},
-                            "Wing taper ratio": {"value": self.taperRatio, "unit": ""},
-                            "Static temperature at cruise altitude": {"value": self.temperatureCruise, "unit": "K"},
-                            "Static density at cruise altitude": {"value": self.densityCruise, "unit": "kg/m^3"},
-                            "Static viscosity at cruise altitude": {"value": self.viscosityCruise, "unit": ""},
-                            "Aircraft speed at cruise altitude": {"value": self.speedCruise, "unit": "m/s"},
-                            "Aircraft Reynolds number": {"value": self.re, "unit": ""},
-                            "Wing position fraction of the fuselage": {"value": self.posFraction, "unit": ""}
-                        }
-
-                 }
-        }
-        lst.update(inputs)
-        return lst
+    # @Attribute
+    # def outputList(self):
+    #     lst = {}
+    #     inputs ={
+    #         "Wing":
+    #             {
+    #                 "Inputs":
+    #                     {
+    #                         "Aspect ratio": {"value": self.aspectRatio, "unit": ""},
+    #                         "Airfoil Mach technology parameter": {"value": self.maTechnology, "unit": ""},
+    #                         "Span percentage for xFoil analysis": {"value": self.percxfoil, "unit": ""}
+    #                     },
+    #                 "Attributes":
+    #                     {
+    #                         "Aircraft Mach Dive Divergence": {"value": self.maDD, "unit": ""},
+    #                         "Dihedral angle": {"value": self.dihedral, "unit": "deg"},
+    #                         "Sweep at quarter chord": {"value": self.sweep25, "unit": "deg"},
+    #                         "Wing reference surface": {"value": self.surface, "unit": "m^2"},
+    #                         "Wing span": {"value": self.span, "unit": "m"},
+    #                         "Wing root chord": {"value": self.chordRoot, "unit": "m"},
+    #                         "Wing tip chord": {"value": self.chordTip, "unit": "m"},
+    #                         "Wing Mean Aerodynamic Chord": {"value": self.cMAC, "unit": "m"},
+    #                         "Wing position fraction of the cylinder": {"value": self.cylinderFraction, "unit": ""},
+    #                         "Static pressure at cruise altitude": {"value": self.pressureCruise, "unit": "Pa"},
+    #                         "Dynamic pressure at aircraft speed and altitude": {"value": self.dynamicPressure, "unit": "Pa"},
+    #                         "Lift coefficient of aircraft in cruise condition": {"value": self.clCruise, "unit": ""},
+    #                         "Wing average thickness to chord ratio": {"value": self.tcRatio, "unit": ""},
+    #                         "Wing taper ratio": {"value": self.taperRatio, "unit": ""},
+    #                         "Static temperature at cruise altitude": {"value": self.temperatureCruise, "unit": "K"},
+    #                         "Static density at cruise altitude": {"value": self.densityCruise, "unit": "kg/m^3"},
+    #                         "Static viscosity at cruise altitude": {"value": self.viscosityCruise, "unit": ""},
+    #                         "Aircraft speed at cruise altitude": {"value": self.speedCruise, "unit": "m/s"},
+    #                         "Aircraft Reynolds number": {"value": self.re, "unit": ""},
+    #                         "Wing position fraction of the fuselage": {"value": self.posFraction, "unit": ""}
+    #                     }
+    #
+    #              }
+    #     }
+    #     lst.update(inputs)
+    #     return lst
 
     # ###### Parts ####################################################################################################
 
